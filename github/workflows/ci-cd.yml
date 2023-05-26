@@ -1,0 +1,36 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code source
+        uses: actions/checkout@v2
+
+      - name: Installer Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 3.1.3 # Remplacez par la version de Ruby que vous utilisez
+
+      - name: Installer les dépendances
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Exécuter les tests
+        run: bundle exec rake test
+
+      - name: Construire l'application
+        run: bundle exec rake build
+
+      - name: Déployer l'application
+        run: bundle exec rake deploy
